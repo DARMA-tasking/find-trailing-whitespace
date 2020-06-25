@@ -2,10 +2,24 @@
 
 set -e
 
+files=$(git ls-files | sed -e 's/^/.\//')
+
+if test $# -gt 0
+then
+    exclude=$1
+
+    IFS=';' read -r -a array <<< "$exclude"
+
+    for elm in "${array[@]}"
+    do
+        files=$(grep -v "$elm" <<< $files)
+    done
+fi
+
 tw_lines=""  # Lines containing trailing whitespaces.
 
 # TODO (harupy): Check only changed files.
-for file in $(git ls-files | sed -e 's/^/.\//')
+for file in $files
 do
   lines=$(egrep -rnIH " +$" $file | cut -f-2 -d ":")
   if [ ! -z "$lines" ]; then
