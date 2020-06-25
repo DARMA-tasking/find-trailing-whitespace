@@ -4,6 +4,13 @@ branding:
   icon: 'search'
   color: 'green'
 description: Find trailing whitespace
+inputs:
+  exclude:
+    description: 'List of ; separated exclude paths'
+    required: true
+    default: ''
 runs:
   using: 'docker'
   image: 'Dockerfile'
+  args:
+    - ${{ inputs.exclude }}
